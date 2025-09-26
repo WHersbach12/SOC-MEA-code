@@ -1,0 +1,36 @@
+# Write comments using the hashtag (#) as first symbol
+# Start a section using the ampersand as first symbol (&)
+# Separate a line in which a variable is specified into parts using the semicolon (;) 
+#
+#
+#Name                   Value               Type                    Description
+&run
+num_threads;            8;                  int;                    The number of CPU threads for parallel computing
+&operation
+galvanostatic;          0;                  bool;                   Operate in galvanostatic (1) or potentiostatic (0) mode
+applied_I_or_V;         1.28;                double;                 Applied current in A/m2 or potential in V
+T;                      923.15;            double;                 Operating temperature in Kelvin
+area;                   1e-4;               double;                 The cross-sectional cell area in m
+#
+#Layer name         Dense   Thickness   Nodes   Porosity    Tortuosity  Particle diameter   Gas species
+#type               bool    double      int     double      double      double              str (vector)
+#unit               -       m           -       m_g^3/m_R^3 m/m         m
+&cell_configuration
+LSCF;               0;      32.5e-6;    20;      0.1;        2.0;                  0.1e-6;            O2,N2
+CGO;                 0;     1e-6;     5;       0.05;        1.0;                  0.1e-6;            O2,N2
+YSZ;                1;      5e-6;      5;      -;            -;                    -;                  -
+Ni-YSZ;             0;      8.9e-6;     20;      0.14;        2.0;             0.1e-6;            H2,H2O
+Support;             0;      0.3e-3;   80;      0.60;        1.4;               1.0e-6;         H2,H2O
+#Note that the order in which you specify the cell layers should be correct. Start on the side of the air electrode
+#Vector input (such as for the gas species) must be comma-separated, without spaces! 
+#"O2,H2O,N2" is correct, "O2, H2O, N2" is not
+#
+#Compartment side   #Gas species    Pressure (inlet)    Inlet mole fraction Inlet flow rate
+#type               str (vector)    double              double (vector)     double
+#unit               -               Pa                  -                   m_g^3/s
+&gas_compartment
+air;                O2,N2;          1e5;                0.21,0.79;          1e-6
+fuel;               H2,H2O;         1e5;                0.1,0.9;            1e-6
+#Note that the mole fractions must sum to one
+#Also note that the same gas species must be specified on both sides of a compartment-electrode interface 
+#(or porous-porous layer interface), in the same order
